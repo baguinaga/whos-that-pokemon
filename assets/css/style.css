@@ -1,0 +1,41 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: url(../images/whosThat.png) no-repeat center center fixed;
+  background-size: cover;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: rgba(0, 0, 0, 0)
+}
+
+.pokeImg {
+  width: 60%;
+  height: auto;
+  -webkit-filter: contrast(0) sepia(100%) hue-rotate(163deg) saturate(178%) brightness(100%);
+  filter: contrast(0) sepia(100%) hue-rotate(163deg) saturate(178%) brightness(100%);
+  opacity: 1;
+
+}
+
+.silhouette-img {
+  -webkit-filter: grayscale(100%) brightness(0);
+  filter: grayscale(100%) brightness(0);
+  opacity: 0.6;
+}
+
+.quiz-box {
+  background: #5ea7ce;
+}
+
+.form-check-input {
+  margin: 2.2% 2.2% !important;
+}
+
+.timer-text {
+  margin-left: 5%;
+}
