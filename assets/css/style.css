@@ -22,11 +22,11 @@ body {
 
 }
 
-.silhouette-img {
+/* .silhouette-img {
   -webkit-filter: grayscale(100%) brightness(0);
   filter: grayscale(100%) brightness(0);
   opacity: 0.6;
-}
+} */
 
 .quiz-box {
   background: #5ea7ce;
