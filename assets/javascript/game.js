@@ -12,6 +12,10 @@ $(document).ready(function () {
 
   var timer = 0;
 
+  var timerInterval;
+  var revealImage;
+  var showNextImage;
+
   //functions
 
   //function that creates arrays of random non-repeating answer options
@@ -52,12 +56,13 @@ $(document).ready(function () {
 
   function displayToPage() {
     $("#imgDiv").attr("src", questionBank[count].src);
-
+    clearInterval(timerInterval);
     displayRadio();
-
+    displayTimer();
     revealImage = setTimeout(function () {
       $("#imgDiv").removeClass("pokeImg");
-    }, 1000 * 6);
+
+    }, 1000 * 5);
   }
 
   function displayRadio() {
@@ -79,6 +84,7 @@ $(document).ready(function () {
       radioInput.attr({
         class: "form-check-input",
         type: "radio",
+        name: questionBank[i].answer,
         value: questionBank[i].options[j]
       })
       var radioLabel = $("<label>");
@@ -91,17 +97,31 @@ $(document).ready(function () {
     $("#form").append(radioDiv);
   }
 
+  function displayTimer() {
+    timer = 0;
+    $("#timer").text(timer + " seconds");
+    timerInterval = setInterval(function(){
+      timer++;
+      $("#timer").text(timer + " seconds");
+      if (timer >= 5) {
+        $("#timer").text("It's " + questionBank[count].answer + " !");
+      }
+    }, 1000);
+  }
+
   function nextPokemon() {
     count++;
     displayToPage();
     $("#imgDiv").addClass("pokeImg");
     if (count === 14) {
-      count = 0;
+      break;
     }
   }
 
   function guessInterval() {
-    showNextImage = setInterval(nextPokemon, 1000 * 10);
+    showNextImage = setInterval(function () {
+      nextPokemon();
+    }, 1000 * 6.5);
   }
 
   // end of functions
@@ -121,6 +141,22 @@ $(document).ready(function () {
 
   //shows the first image and then call on guessInterval to give the user time to respond
   displayToPage();
+
   guessInterval();
 
+  $(document).on("change", ".form-check-input", function () {
+
+    // get value and question index from input
+    var pokemonName = questionBank[count].answer;
+    var userAnswer = $(this).val();
+
+    $("#submit").on("click", function () {
+      if (pokemonName === userAnswer) {
+        $("#imgDiv").removeClass("pokeImg");
+        clearInterval(timerInterval);
+        $("#timer").text("It's " + questionBank[count].answer + " !");
+        console.log("this is correct");
+      } 
+    })
+  });
 });
