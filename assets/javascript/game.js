@@ -1,8 +1,8 @@
-// $(document).ready(function () {
+$(document).ready(function () {
 
 // global variables
 
-var pokeArray = ["Pikachu", "Charmander", "Bulabasaur", "Squirtle", "Snorlax", "Gyarydos", "Scyther", "Mewtwo", "Gengar", "Kabutops", "Dragonair", "Ninetails", "Slowpoke", "Meowth", "Lapras"];
+var pokeArray = ["Pikachu", "Charmander", "Bulbasaur", "Squirtle", "Snorlax", "Gyarydos", "Scyther", "Mewtwo", "Gengar", "Kabutops", "Dragonair", "Ninetails", "Slowpoke", "Meowth", "Lapras"];
 
 var pokeAnswer = [];
 
@@ -14,6 +14,7 @@ var timerActive = false;
 
 //functions
 
+//function that creates arrays of random non-repeating answer options
 function randomOptions(array, key) {
   for (let i = 0; i < array.length; i++) {
 
@@ -43,13 +44,18 @@ function randomOptions(array, key) {
     //returning the array as their corresponding text option
 
     for (let m = 0; m < key[i].length; m++) {
-      key[i][m] = array[key[i][m]]; 
+      key[i][m] = array[key[i][m]];
     }
   }
-  return key; 
+  return key;
 }
 
-// old show options function (not being called; here for reference purposes)
+//assigns the randomly created options to the corresponding key value from pokeArray
+function createObject(array, value, obj) {
+  array.forEach((key, i) => obj[key] = value[i]);
+}
+
+// old showOptions function (not being called; here for reference purposes)
 function showOptions(array, key) {
 
   for (let i = 0; i < array.length; i++) {
@@ -85,6 +91,10 @@ function showOptions(array, key) {
 
 randomOptions(pokeArray, pokeAnswer);
 
-// console.log(pokeAnswer);
+createObject(pokeArray, pokeAnswer, pokeObject);
 
-// });
+console.log(pokeObject);
+
+console.log(pokeObject[pokeArray[0]]);
+
+});
