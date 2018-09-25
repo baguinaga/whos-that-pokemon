@@ -1,100 +1,126 @@
 $(document).ready(function () {
 
-// global variables
+  // global variables
 
-var pokeArray = ["Pikachu", "Charmander", "Bulbasaur", "Squirtle", "Snorlax", "Gyarydos", "Scyther", "Mewtwo", "Gengar", "Kabutops", "Dragonair", "Ninetails", "Slowpoke", "Meowth", "Lapras"];
+  var pokeArray = ["Pikachu", "Charmander", "Bulbasaur", "Squirtle", "Snorlax", "Gyarydos", "Scyther", "Mewtwo", "Gengar", "Kabutops", "Dragonair", "Ninetails", "Slowpoke", "Meowth", "Lapras"];
 
-var pokeAnswer = [];
+  var pokeOptions = [];
 
-var pokeObject = {};
+  var questionBank = [];
 
-var timerCount = 0;
+  var count = 0;
 
-var timerActive = false;
+  var timer = 0;
 
-//functions
+  //functions
 
-//function that creates arrays of random non-repeating answer options
-function randomOptions(array, key) {
-  for (let i = 0; i < array.length; i++) {
+  //function that creates arrays of random non-repeating answer options
+  function randomOptions(array, key) {
+    for (let i = 0; i < array.length; i++) {
 
-    //making key an empty array that includes the ith number in the first position
+      //making key an empty array that includes the ith number in the first position
 
-    key[i] = [];
-    key[i][0] = i
+      key[i] = [];
+      key[i][0] = i
 
-    //function for creating 4 ( 3 + correct option) non-repeating numbers and then calling on it
+      //function for creating 4 ( 3 + correct option) non-repeating numbers and then calling on it
 
-    function randomNumber(array, key) {
-      while (key[i].length < 4) {
-        const randomNum = Math.floor(Math.random() * array.length);
-        (key[i].includes(randomNum)) ? randomNumber(array, key): key[i].push(randomNum);
+      function randomNumber(array, key) {
+        while (key[i].length < 4) {
+          const randomNum = Math.floor(Math.random() * array.length);
+          (key[i].includes(randomNum)) ? randomNumber(array, key): key[i].push(randomNum);
+        }
+      }
+
+      randomNumber(array, key);
+
+      //shuffling the 4 options
+
+      for (let n = key[i].length - 1; n > 0; n--) {
+        const j = Math.floor(Math.random() * (n + 1));
+        [key[i][n], key[i][j]] = [key[i][j], key[i][n]];
+      }
+
+      //returning the array as their corresponding text option
+
+      for (let m = 0; m < key[i].length; m++) {
+        key[i][m] = array[key[i][m]];
       }
     }
-
-    randomNumber(array, key);
-
-    //shuffling the 4 options
-
-    for (let n = key[i].length - 1; n > 0; n--) {
-      const j = Math.floor(Math.random() * (n + 1));
-      [key[i][n], key[i][j]] = [key[i][j], key[i][n]];
-    }
-
-    //returning the array as their corresponding text option
-
-    for (let m = 0; m < key[i].length; m++) {
-      key[i][m] = array[key[i][m]];
-    }
+    return key;
   }
-  return key;
-}
 
-//assigns the randomly created options to the corresponding key value from pokeArray
-function createObject(array, value, obj) {
-  array.forEach((key, i) => obj[key] = value[i]);
-}
+  function displayToPage() {
+    $("#imgDiv").attr("src", questionBank[count].src);
 
-// old showOptions function (not being called; here for reference purposes)
-function showOptions(array, key) {
+    displayRadio();
 
-  for (let i = 0; i < array.length; i++) {
-    $("#pokemonImg").attr("src", "assets/images/" + String(i) + ".png");
-    var radioDiv = $("<div>")
-    radioDiv.addClass("form-check form-check-inline");
+    revealImage = setTimeout(function () {
+      $("#imgDiv").removeClass("pokeImg");
+    }, 1000);
+  }
+
+  function displayRadio() {
+
+    //clearing the previous div for the next iteration of count
+
     $("#form").empty();
+    let i = count;
+
+    //creating the radio div
+
+    var radioDiv = $("<div>");
+    radioDiv.addClass("form-check form-check-inline");
+
+    //creating 4 radio buttons from the object options
 
     for (let j = 0; j < 4; j++) {
-
       var radioInput = $("<input>");
       radioInput.attr({
-
         class: "form-check-input",
         type: "radio",
-        name: array[i],
-        value: array[key[i][j]]
-
+        value: questionBank[i].options[j]
       })
-
       var radioLabel = $("<label>");
       radioLabel
         .addClass("form-check-label")
-        .text(array[key[i][j]]);
-      radioDiv.append(radioInput, radioLabel);
-      $("#form").append(radioDiv);
+        .text(questionBank[i].options[j]);
 
-      //testing to see if the text and images are actually being iterated
-      console.log(array[key[i][j]]);
+      radioDiv.append(radioInput, radioLabel);
+    }
+    $("#form").append(radioDiv);
+  }
+
+  function nextPokemon() {
+    count++;
+    displayToPage();
+    $("#imgDiv").addClass("pokeImg");
+    if (count === 14) {
+      count = 0;
     }
   }
-}
 
-randomOptions(pokeArray, pokeAnswer);
+  function guessInterval() {
+    showNextImage = setInterval(nextPokemon, 1000 * 10);
+  }
 
-createObject(pokeArray, pokeAnswer, pokeObject);
+  // end of functions
 
-console.log(pokeObject);
+  randomOptions(pokeArray, pokeOptions);
 
-console.log(pokeObject[pokeArray[0]]);
+  //creating an array of objects, for each pokemon
+  for (let i = 0; i < pokeArray.length; i++) {
+    obj = {};
+    obj["answer"] = pokeArray[i];
+    obj["options"] = pokeOptions[i];
+    obj["src"] = "assets/images/" + i + ".png";
+    questionBank.push(obj);
+  }
+
+  console.log(questionBank);
+
+  //shows the first image and then call on guessInterval to give the user time to respond
+  displayToPage();
+  guessInterval();
 
 });
