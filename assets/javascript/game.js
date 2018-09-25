@@ -101,7 +101,7 @@ $(document).ready(function () {
   }
 
   function guessInterval() {
-    showNextImage = setInterval(nextPokemon, 1000 * 8);
+    showNextImage = setInterval(nextPokemon, 1000 * 10);
   }
 
   // end of functions
