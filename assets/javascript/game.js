@@ -113,8 +113,10 @@ $(document).ready(function () {
     count++;
     displayToPage();
     $("#imgDiv").addClass("pokeImg");
-    if (count === 14) {
-      break;
+    if (count === 15) {
+      clearInterval(timerInterval);
+      timer = 0;
+      $("#timer").text("Game over!")
     }
   }
 
